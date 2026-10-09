@@ -20,6 +20,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--light);
             color: var(--dark);
@@ -97,6 +101,16 @@
             overflow: hidden;
         }
 
+        /* NEW: particle network canvas */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
@@ -112,6 +126,12 @@
             background: linear-gradient(to right, #ffffff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shimmer 4s linear infinite; /* NEW: subtle light sweep */
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
         }
 
         .hero p {
@@ -119,6 +139,23 @@
             color: #94a3b8;
             margin-bottom: 2.5rem;
         }
+
+        /* NEW: scroll reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal.d1 { transition-delay: 0.1s; }
+        .reveal.d2 { transition-delay: 0.2s; }
+        .reveal.d3 { transition-delay: 0.3s; }
 
         /* 核心业务板块 */
         .services {
@@ -190,6 +227,7 @@
             font-size: 2.5rem;
             color: var(--accent);
             margin-bottom: 0.5rem;
+            font-variant-numeric: tabular-nums;
         }
 
         /* 页脚 */
@@ -220,6 +258,7 @@
 
     <!-- 英雄主幅面 -->
     <section class="hero">
+        <canvas id="particles"></canvas>
         <div class="hero-content">
             <h1>Accelerate Digital Transformation with Intelligent Cloud</h1>
             <p>Empowering businesses worldwide with enterprise-grade cloud architecture, agile automation pipelines, and robust cybersecurity frameworks.</p>
@@ -229,22 +268,22 @@
 
     <!-- 核心服务板块 -->
     <section class="services" id="services">
-        <div class="section-title">
+        <div class="section-title reveal">
             <h2>Our Core Ecosystem</h2>
             <p>Scalable infrastructure optimized for speed, performance, and maximum availability.</p>
         </div>
         <div class="grid">
-            <div class="card">
+            <div class="card reveal d1">
                 <div class="card-icon">☁️</div>
                 <h3>Cloud Engineering</h3>
                 <p>Architecting secure high-availability environments on global cloud platforms. Specialized in cluster scaling and state management.</p>
             </div>
-            <div class="card">
+            <div class="card reveal d2">
                 <div class="card-icon">🛡️</div>
                 <h3>Cyber Security</h3>
                 <p>Deploying ironclad Zero-Trust models and real-time vulnerability detection matrix to secure critical enterprise infrastructure assets.</p>
             </div>
-            <div class="card">
+            <div class="card reveal d3">
                 <div class="card-icon">🚀</div>
                 <h3>Automated CI/CD</h3>
                 <p>Accelerating product engineering with fully containerized automation and intelligent continuous deployment systems.</p>
@@ -255,16 +294,16 @@
     <!-- 数据看板 -->
     <section class="stats">
         <div class="stats-grid">
-            <div class="stat-item">
-                <h3>99.99%</h3>
+            <div class="stat-item reveal d1">
+                <h3 class="counter" data-target="99.99" data-decimals="2" data-suffix="%">0%</h3>
                 <p>Uptime Guaranteed</p>
             </div>
-            <div class="stat-item">
-                <h3>240+</h3>
+            <div class="stat-item reveal d2">
+                <h3 class="counter" data-target="240" data-suffix="+">0+</h3>
                 <p>Global Services</p>
             </div>
-            <div class="stat-item">
-                <h3>15M+</h3>
+            <div class="stat-item reveal d3">
+                <h3 class="counter" data-target="15" data-suffix="M+">0M+</h3>
                 <p>Requests Handled</p>
             </div>
         </div>
@@ -275,5 +314,143 @@
         <p>&copy; 2026 NovaCorp Solutions Inc. Hosted and Deployed Safely on AWS Platform.</p>
     </footer>
 
+    <script>
+        /* ========== 1. Particle network in hero ========== */
+        (function () {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            const hero = canvas.parentElement;
+            let w, h, particles;
+            const mouse = { x: -9999, y: -9999 };
+
+            function resize() {
+                w = canvas.width = hero.offsetWidth;
+                h = canvas.height = hero.offsetHeight;
+            }
+
+            function init() {
+                const count = Math.min(90, Math.floor((w * h) / 12000));
+                particles = [];
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        vx: (Math.random() - 0.5) * 0.35,
+                        vy: (Math.random() - 0.5) * 0.35,
+                        r: Math.random() * 1.8 + 0.6
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > w) p.vx *= -1;
+                    if (p.y < 0 || p.y > h) p.vy *= -1;
+
+                    // gentle mouse repulsion
+                    const dxm = p.x - mouse.x, dym = p.y - mouse.y;
+                    const dm = Math.hypot(dxm, dym);
+                    if (dm < 120 && dm > 0) {
+                        p.x += (dxm / dm) * 0.4;
+                        p.y += (dym / dm) * 0.4;
+                    }
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const q = particles[j];
+                        const dx = p.x - q.x, dy = p.y - q.y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < 130) {
+                            ctx.strokeStyle = 'rgba(56, 189, 248, ' + (0.25 * (1 - dist / 130)) + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(q.x, q.y);
+                            ctx.stroke();
+                        }
+                    }
+
+                    ctx.fillStyle = 'rgba(125, 211, 252, 0.7)';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                requestAnimationFrame(draw);
+            }
+
+            hero.addEventListener('mousemove', function (e) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            });
+            hero.addEventListener('mouseleave', function () {
+                mouse.x = -9999;
+                mouse.y = -9999;
+            });
+            window.addEventListener('resize', function () { resize(); init(); });
+
+            resize();
+            init();
+            draw();
+        })();
+
+        /* ========== 2. Scroll reveal animations ========== */
+        (function () {
+            const els = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                els.forEach(function (el) { el.classList.add('visible'); });
+                return;
+            }
+            const io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            els.forEach(function (el) { io.observe(el); });
+        })();
+
+        /* ========== 3. Count-up stats ========== */
+        (function () {
+            const counters = document.querySelectorAll('.counter');
+            function animate(el) {
+                const target = parseFloat(el.dataset.target);
+                const decimals = parseInt(el.dataset.decimals || '0', 10);
+                const suffix = el.dataset.suffix || '';
+                const duration = 1800;
+                const start = performance.now();
+                function tick(now) {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    el.textContent = (target * eased).toFixed(decimals) + suffix;
+                    if (progress < 1) {
+                        requestAnimationFrame(tick);
+                    } else {
+                        el.textContent = target.toFixed(decimals) + suffix;
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+            if (!('IntersectionObserver' in window)) {
+                counters.forEach(animate);
+                return;
+            }
+            const io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        animate(entry.target);
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            counters.forEach(function (el) { io.observe(el); });
+        })();
+    </script>
 </body>
 </html>
+

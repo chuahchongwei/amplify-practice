@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaCorp | Next-Gen Cloud & AI Solutions</title>
+    <style>
+        :root {
+            --primary: #0071e3;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --accent: #38bdf8;
+            --gray: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        header {
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--accent); }
+
+        .btn-cta {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.6rem 1.3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 113, 227, 0.5);
+        }
+
+        /* 英雄横幅区 (Hero Section) */
+        .hero {
+            background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.15), transparent), linear-gradient(180deg, var(--dark) 0%, #1e293b 100%);
+            color: white;
+            padding: 10rem 2rem 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 2.5rem;
+        }
+
+        /* 核心业务板块 */
+        .services {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p { color: var(--gray); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* 数据看板 */
+        .stats {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: #020617;
+            color: #64748b;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">Nova<span>Corp</span></div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#contact" class="btn-cta">Get Started</a>
+        </div>
+    </header>
+
+    <!-- 英雄主幅面 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Accelerate Digital Transformation with Intelligent Cloud</h1>
+            <p>Empowering businesses worldwide with enterprise-grade cloud architecture, agile automation pipelines, and robust cybersecurity frameworks.</p>
+            <a href="#services" class="btn-cta">Explore Platform</a>
+        </div>
+    </section>
+
+    <!-- 核心服务板块 -->
+    <section class="services" id="services">
+        <div class="section-title">
+            <h2>Our Core Ecosystem</h2>
+            <p>Scalable infrastructure optimized for speed, performance, and maximum availability.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">☁️</div>
+                <h3>Cloud Engineering</h3>
+                <p>Architecting secure high-availability environments on global cloud platforms. Specialized in cluster scaling and state management.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🛡️</div>
+                <h3>Cyber Security</h3>
+                <p>Deploying ironclad Zero-Trust models and real-time vulnerability detection matrix to secure critical enterprise infrastructure assets.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🚀</div>
+                <h3>Automated CI/CD</h3>
+                <p>Accelerating product engineering with fully containerized automation and intelligent continuous deployment systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据看板 -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>99.99%</h3>
+                <p>Uptime Guaranteed</p>
+            </div>
+            <div class="stat-item">
+                <h3>240+</h3>
+                <p>Global Services</p>
+            </div>
+            <div class="stat-item">
+                <h3>15M+</h3>
+                <p>Requests Handled</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>&copy; 2026 NovaCorp Solutions Inc. Hosted and Deployed Safely on AWS Platform.</p>
+    </footer>
+
+</body>
+</html>
